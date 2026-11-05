@@ -1,0 +1,76 @@
+/*
+――――――――――――――――――――――――――――――――――――――――――――――
+搜尋命中字強化 Search Highlight
+――――――――――――――――――――――――――――――――――――――――――――――
+
+為什麼預設看不清楚：
+
+1. 筆記內的命中字（Ctrl+F、或從搜尋結果點進來）Obsidian 預設是
+   box-shadow: 0 0 0 3px var(--text-accent)
+   只有一圈外框、沒有底色，而 --text-accent 接的是你的強調色
+   #fff8e0（極淡的米黃），所以那圈框幾乎看不見。
+2. 側邊搜尋結果的命中字吃 --text-highlight-bg，本主題是
+   hsla(44, 100%, 50%, 0.2)，透明度只有兩成，淡。
+
+這個片段把兩處都換成實心底色 + 深色字，底色取主題自己的
+--color-yellow（淺色 hsla(42,89%,46%)、深色 rgb(225,178,67)）。
+
+――――――――――――――――――――――――――――――――――――――――――――――
+*/
+
+/* ── 顏色調這裡 ────────────────────────────── */
+/* 底色是主題 --color-yellow 的 60% 濃度（留四成透出底下的紙色）。
+   嫌淡就把兩個 0.6 往上調，嫌重就往下，1 等於全滿。
+   淺色與深色主題的黃本來就不同色，所以分兩段寫。 */
+body {
+    --search-hit-bg: hsla(42, 89%, 46%, 0.6);
+    --search-hit-text: #2b2204;
+    --search-hit-ring: hsla(42, 89%, 32%, 0.6);
+}
+
+.theme-dark {
+    --search-hit-bg: rgba(225, 178, 67, 0.6);
+    --search-hit-ring: rgba(166, 123, 28, 0.6);
+}
+
+/* ── 側邊搜尋結果、反向連結裡的命中字 ─────────── */
+.search-result-file-matched-text {
+    background-color: var(--search-hit-bg);
+    color: var(--search-hit-text);
+    font-weight: var(--font-semibold);
+    border-radius: 2px;
+}
+
+/* ── 筆記內的命中字（編輯模式與閱讀模式）───────── */
+.cm-s-obsidian span.obsidian-search-match-highlight,
+.markdown-reading-view .obsidian-search-match-highlight {
+    background-color: var(--search-hit-bg);
+    color: var(--search-hit-text);
+    box-shadow: 0 0 0 2px var(--search-hit-ring);
+    border-radius: 2px;
+    mix-blend-mode: normal;
+}
+
+/* ══ 替代樣式 A：不要底色，改成粗底線 ═══════════
+   覺得整片黃太吵就改用這組，把上面兩段註解掉。
+   ───────────────────────────────────────── */
+/*
+.search-result-file-matched-text,
+.cm-s-obsidian span.obsidian-search-match-highlight,
+.markdown-reading-view .obsidian-search-match-highlight {
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    border-bottom: 2px solid var(--search-hit-ring);
+    font-weight: var(--font-semibold);
+}
+*/
+
+/* ══ 替代樣式 B：命中的那一列整列標起來 ══════════
+   搜尋結果列表裡比較好掃，可以跟上面的底色並存。
+   ───────────────────────────────────────── */
+/*
+.search-result-file-match {
+    border-left: 2px solid var(--search-hit-ring);
+}
+*/
