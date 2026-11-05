@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Obsidian Primary Theme Preview</title>
+  <link rel="stylesheet" href="./theme.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: var(--font-text-theme), "Noto Sans TC", sans-serif;
+      color: var(--text-normal);
+      background: var(--background-secondary);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 52px 244px minmax(0, 1fr);
+      height: 100vh;
+      background: var(--background-secondary);
+    }
+
+    .ribbon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      background: var(--background-secondary);
+      border-right: 1px solid var(--background-modifier-border);
+      color: var(--icon-color);
+    }
+
+    .side-dock-ribbon-action {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-s);
+      font-size: 14px;
+      line-height: 1;
+      color: var(--non-alternating-color);
+      background: transparent;
+    }
+
+    .side-dock-ribbon-action.is-active {
+      color: var(--interactive-accent);
+      background: var(--background-primary);
+      border-color: var(--interactive-accent);
+    }
+
+    .side-dock-ribbon-action:hover {
+      color: var(--interactive-accent);
+      background: var(--icon-bg-hover);
+    }
+
+    .sidebar {
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr) 32px;
+      background: var(--background-secondary);
+      border-right: 1px solid var(--background-modifier-border);
+      min-width: 0;
+    }
+
+    .sidebar-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      color: var(--icon-color);
+      border-bottom: 1px solid var(--background-modifier-border);
+    }
+
+    .tool-icon {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: var(--radius-s);
+      font-size: 12px;
+    }
+
+    .tree {
+      overflow: auto;
+      padding: 8px 8px 20px;
+      font-size: 13px;
+      color: var(--nav-item-color);
+    }
+
+    .tree-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 2px 8px;
+      margin: 1px 0;
+      border-radius: var(--nav-item-radius);
+      white-space: nowrap;
+    }
+
+    .tree-item.depth-1 { padding-left: 22px; }
+    .tree-item.depth-2 { padding-left: 38px; }
+
+    .tree-item.depth-1::before,
+    .tree-item.depth-2::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--background-modifier-border);
+    }
+
+    .tree-item.depth-1::before { left: 14px; }
+    .tree-item.depth-2::before { left: 30px; }
+
+    .tree-item.is-active {
+      color: var(--nav-item-color-active);
+      background: var(--background-primary);
+      box-shadow: var(--nav-file-shadow-active);
+    }
+
+    .chevron {
+      color: var(--collapse-icon-color);
+      font-size: 12px;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      color: var(--text-faint);
+      font-size: 12px;
+      border-top: 1px solid var(--background-modifier-border);
+      background: var(--background-primary-alt);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-rows: 38px 32px minmax(0, 1fr);
+      min-width: 0;
+      background: var(--editor-bg-color);
+    }
+
+    .tabs {
+      display: flex;
+      align-items: end;
+      gap: 4px;
+      padding: 0 8px;
+      background: var(--background-secondary);
+      border-bottom: 1px solid var(--background-modifier-border);
+    }
+
+    .tab {
+      min-width: 164px;
+      max-width: 220px;
+      padding: 8px 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: var(--tab-radius-active);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab.is-active {
+      color: var(--text-normal);
+      background: var(--editor-bg-color);
+      border-color: var(--background-modifier-border);
+    }
+
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 18px;
+      color: var(--breadcrumb-color);
+      font-size: 12px;
+      border-bottom: 1px solid var(--background-modifier-border);
+      background: var(--editor-bg-color);
+    }
+
+    .document-scroll {
+      overflow: auto;
+      background: var(--editor-bg-color);
+    }
+
+    .markdown-rendered.note {
+      width: min(1120px, calc(100vw - 360px));
+      min-width: 760px;
+      margin: 0 auto;
+      padding: 28px 28px 80px;
+      background: var(--editor-bg-color);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .note h1 {
+      margin: 0 0 22px;
+      color: var(--h1-color);
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    .note h2 {
+      margin: 34px 0 14px;
+      color: var(--h2-color);
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .note h3 {
+      margin: 28px 0 12px;
+      color: var(--h3-color);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .note p {
+      margin: 0 0 18px;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 28px 0 40px;
+      background: var(--background-modifier-border);
+    }
+
+    .metadata-container {
+      margin: 0 -12px 30px;
+      padding: var(--metadata-container-padding);
+      background: var(--metadata-background);
+      border: var(--metadata-border-width) solid var(--background-modifier-border);
+      border-radius: var(--metadata-border-radius);
+      font-size: var(--font-small);
+    }
+
+    .metadata-properties-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--size-4-2);
+      color: var(--metadata-properties-title-color);
+      font-size: calc(var(--font-smallest) - 0.1em);
+      font-weight: var(--font-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .metadata-content {
+      display: grid;
+      gap: 2px;
+    }
+
+    .metadata-property {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr);
+      align-items: start;
+      min-height: 26px;
+      border-radius: var(--metadata-property-radius);
+    }
+
+    .metadata-property:hover {
+      background: var(--metadata-input-background-hover);
+    }
+
+    .metadata-property-key,
+    .metadata-property-value {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 3px 8px;
+    }
+
+    .metadata-property-key {
+      gap: 6px;
+      color: var(--metadata-key-input-color);
+    }
+
+    .metadata-property-value {
+      color: var(--metadata-input-text-color);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .metadata-property-icon {
+      width: 14px;
+      color: var(--icon-color);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .note strong {
+      color: var(--bold-color);
+      font-weight: var(--font-semibold);
+    }
+
+    .note code {
+      color: var(--inline-code-color);
+      background: var(--inline-code-bg);
+      padding: 2px 5px;
+      border-radius: var(--inline-code-radius);
+      font-size: 0.92em;
+    }
+
+    .note :is(ul, ol) {
+      margin: 14px 0 22px;
+      padding: 14px 18px 14px 38px;
+      background: var(--list-background);
+      border-radius: var(--radius-s);
+    }
+
+    .note li + li {
+      margin-top: 8px;
+    }
+
+    .note table {
+      width: calc(100% + 56px);
+      margin: 20px -28px 28px;
+      border-collapse: collapse;
+      background: var(--table-background);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .note th,
+    .note td {
+      padding: 8px 12px;
+      border: 1px solid var(--background-modifier-border);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .note th {
+      background: var(--table-header-background);
+      font-weight: var(--font-semibold);
+    }
+
+    .note td:nth-child(2n+2) {
+      background: var(--table-column-alt-background);
+    }
+
+    .note .callout {
+      margin: 22px 0;
+      padding: 14px 16px;
+      background: var(--list-background);
+      border-left: 3px solid var(--interactive-accent);
+      border-radius: var(--radius-s);
+    }
+
+    .note .callout-title {
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-weight: var(--font-semibold);
+    }
+
+    @media (max-width: 960px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .ribbon,
+      .sidebar {
+        display: none;
+      }
+
+      .markdown-rendered.note {
+        width: auto;
+        min-width: 0;
+        padding: 24px 20px 60px;
+      }
+
+      .note table {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .metadata-container {
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body class="theme-light">
+  <div class="app">
+    <nav class="ribbon" aria-label="Obsidian ribbon mock">
+      <div class="clickable-icon side-dock-ribbon-action">□</div>
+      <div class="clickable-icon side-dock-ribbon-action is-active">⌂</div>
+      <div class="clickable-icon side-dock-ribbon-action">⌕</div>
+      <div class="clickable-icon side-dock-ribbon-action">⌘</div>
+      <div class="clickable-icon side-dock-ribbon-action">⌑</div>
+      <div class="clickable-icon side-dock-ribbon-action">☷</div>
+    </nav>
+
+    <aside class="sidebar">
+      <div class="sidebar-toolbar">
+        <span class="tool-icon">✎</span>
+        <span class="tool-icon">▣</span>
+        <span class="tool-icon">↟</span>
+        <span class="tool-icon">☰</span>
+      </div>
+
+      <div class="tree" aria-label="File tree mock">
+        <div class="tree-item"><span class="chevron">›</span>202605 自行調整子分類</div>
+        <div class="tree-item"><span class="chevron">›</span>202605 全家關轉店</div>
+        <div class="tree-item"><span class="chevron">›</span>202605 訂單優惠券管理</div>
+        <div class="tree-item"><span class="chevron">›</span>202605 首頁選單 active 殘留</div>
+        <div class="tree-item"><span class="chevron">›</span>202606 蓋章果更新產地直送圖片</div>
+        <div class="tree-item"><span class="chevron">›</span>202607 綠界信用戶庫存卡</div>
+        <div class="tree-item"><span class="chevron">›</span>202607 禮物券</div>
+        <div class="tree-item"><span class="chevron">›</span>202608 黑貓 API 遷移修正</div>
+        <div class="tree-item"><span class="chevron">›</span>202609 商品追加贈品</div>
+        <div class="tree-item"><span class="chevron">⌄</span>202610 全家核帳匯出優化</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>修改回饋</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>總覽</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>開發規劃</div>
+        <div class="tree-item"><span class="chevron">⌄</span>202610 產地直送上下架呈現優化</div>
+        <div class="tree-item depth-1 is-active"><span class="chevron">•</span>狀態判斷規格表</div>
+        <div class="tree-item depth-1"><span class="chevron">•</span>原始需求</div>
+        <div class="tree-item"><span class="chevron">›</span>202610 檢驗報告流程優化</div>
+        <div class="tree-item"><span class="chevron">›</span>202610 App 信用卡改 TapPay</div>
+        <div class="tree-item"><span class="chevron">›</span>202610 OmniChat 通知型訊息</div>
+        <div class="tree-item"><span class="chevron">⌄</span>03 功能開發</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>完成</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>不急總會</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>單品流程優化</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>無毒農小精靈</div>
+        <div class="tree-item depth-1"><span class="chevron">›</span>等家重構</div>
+        <div class="tree-item depth-1"><span class="chevron">⌄</span>農友出貨平台</div>
+        <div class="tree-item depth-2"><span class="chevron">›</span>自動化測試</div>
+        <div class="tree-item depth-2"><span class="chevron">›</span>討論紀錄</div>
+        <div class="tree-item depth-2"><span class="chevron">›</span>參考</div>
+        <div class="tree-item depth-2"><span class="chevron">›</span>第二階段</div>
+        <div class="tree-item depth-2"><span class="chevron">›</span>規劃文件</div>
+      </div>
+
+      <div class="statusbar">
+        <span>Obsidian</span>
+        <span>?</span>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div class="tabs">
+        <div class="tab is-active">狀態判斷規格表</div>
+        <div class="tab">需求規格</div>
+        <div class="tab">＋</div>
+      </div>
+      <div class="crumbs">
+        <span>‹</span>
+        <span>›</span>
+        <span>GreenBox</span>
+        <span>/</span>
+        <span>02_一般需求</span>
+        <span>/</span>
+        <span>202610_產地直送上下架呈現優化</span>
+        <span>/</span>
+        <strong>狀態判斷規格表</strong>
+      </div>
+
+      <main class="document-scroll">
+        <article class="markdown-rendered note">
+          <h1>狀態判斷規格表</h1>
+
+          <h2>產地直送上下架呈現優化 — 狀態判斷規格表</h2>
+          <section class="metadata-container">
+            <div class="metadata-properties-heading">
+              <span class="metadata-properties-title">屬性</span>
+              <span class="collapse-indicator">⌄</span>
+            </div>
+            <div class="metadata-content">
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">▣</span>建立日期</div>
+                <div class="metadata-property-value">2026-10-12</div>
+              </div>
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">▣</span>最後更新</div>
+                <div class="metadata-property-value">2026-10-13</div>
+              </div>
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">☰</span>類型</div>
+                <div class="metadata-property-value">功能規劃</div>
+              </div>
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">☰</span>狀態</div>
+                <div class="metadata-property-value">規劃中</div>
+              </div>
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">☰</span>影響範圍</div>
+                <div class="metadata-property-value">fruit_web、Product_Api、react-component-export、fruit_app、GoX 產品標籤資料、ProductRemind 到貨提醒</div>
+              </div>
+              <div class="metadata-property">
+                <div class="metadata-property-key"><span class="metadata-property-icon">☰</span>資料來源</div>
+                <div class="metadata-property-value">原始需求.md</div>
+              </div>
+            </div>
+          </section>
+
+          <div class="divider"></div>
+
+          <h2>需求摘要</h2>
+          <p>
+            本案採用 <strong>方案 A：API 統一輸出商品前台狀態</strong>。後端根據既有「產品標籤」、
+            原因分類、<code>EventDate</code>、<code>RemindText</code> 快速到貨類別等資料，
+            統一判斷商品在前台應呈現的狀態。Web 與 App 不各自推導規則，只負責依 API 回傳的狀態物件顯示畫面。
+          </p>
+          <p>
+            核心目標是讓「產地直送」商品在不可購買時，也能清楚告訴消費者原因：
+            「產季結束」、「產季未到」、「氣候因素暫停接單」、「供貨不足，暫停接單」或「本商品已停止販售」。
+          </p>
+
+          <h2>統一狀態物件建議</h2>
+          <p>API 建議回傳一組前台專用狀態物件，避免 Web / App 各自解讀標籤資料。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>欄位</th>
+                <th>型別</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>status</code></td>
+                <td>string</td>
+                <td>前台狀態代碼，例如 <code>seasonEnded</code>、<code>seasonNotStarted</code>、<code>weatherPaused</code>、<code>supplyPaused</code>、<code>discontinued</code></td>
+              </tr>
+              <tr>
+                <td><code>labelText</code></td>
+                <td>string</td>
+                <td>商品圖蓋圖文字</td>
+              </tr>
+              <tr>
+                <td><code>buttonText</code></td>
+                <td>string</td>
+                <td>商品頁主要按鈕文字</td>
+              </tr>
+              <tr>
+                <td><code>canAddToCart</code></td>
+                <td>bool</td>
+                <td>是否可加入購物車</td>
+              </tr>
+              <tr>
+                <td><code>showInList</code></td>
+                <td>bool</td>
+                <td>是否出現在分類 / 一般列表</td>
+              </tr>
+              <tr>
+                <td><code>showInSearch</code></td>
+                <td>bool</td>
+                <td>是否可被站內搜尋找到</td>
+              </tr>
+              <tr>
+                <td><code>showProductPage</code></td>
+                <td>bool</td>
+                <td>商品頁是否可正常開啟</td>
+              </tr>
+              <tr>
+                <td><code>seasonText</code></td>
+                <td>string / null</td>
+                <td>顯示「產季未到」時帶出的預計產期，來源為 <code>RemindText</code></td>
+              </tr>
+              <tr>
+                <td><code>reasonType</code></td>
+                <td>string / null</td>
+                <td>原始原因分類，供 debug / 後台查核使用</td>
+              </tr>
+              <tr>
+                <td><code>reasonName</code></td>
+                <td>string / null</td>
+                <td>原始原因名稱，供 debug / 後台查核使用</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>狀態判斷順序</h2>
+          <p>狀態應由 API 以固定優先序決定，前端不再用庫存、標籤、分類自行推論。</p>
+          <ol>
+            <li>若商品已設定永久停售，回傳 <code>discontinued</code>，列表與搜尋皆不顯示。</li>
+            <li>若商品有產季結束標籤，回傳 <code>seasonEnded</code>，商品頁可開啟但不可加入購物車。</li>
+            <li>若商品尚未到產季，回傳 <code>seasonNotStarted</code>，並帶出預計可購買月份。</li>
+            <li>若商品因氣候或供貨暫停，回傳 <code>weatherPaused</code> 或 <code>supplyPaused</code>。</li>
+            <li>若以上條件皆不符合，依既有可購買規則回傳 <code>available</code>。</li>
+          </ol>
+
+          <h2>前台文案規格</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>狀態</th>
+                <th>商品圖標籤</th>
+                <th>商品頁按鈕</th>
+                <th>補充說明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>seasonEnded</code></td>
+                <td>產季結束</td>
+                <td>暫停販售</td>
+                <td>保留商品頁，避免消費者從外部連結進來時看不到資訊。</td>
+              </tr>
+              <tr>
+                <td><code>seasonNotStarted</code></td>
+                <td>產季未到</td>
+                <td>到貨提醒我</td>
+                <td>若有 <code>seasonText</code>，可顯示「預計 12 月開採」。</td>
+              </tr>
+              <tr>
+                <td><code>weatherPaused</code></td>
+                <td>暫停接單</td>
+                <td>到貨提醒我</td>
+                <td>用於颱風、豪雨、低溫等不可控因素。</td>
+              </tr>
+              <tr>
+                <td><code>supplyPaused</code></td>
+                <td>暫停接單</td>
+                <td>到貨提醒我</td>
+                <td>用於採收量不足、產地臨時調度等供貨因素。</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>待確認問題</h2>
+          <ul>
+            <li>「永久停售」是否仍允許既有收藏、訂單紀錄連回商品頁？</li>
+            <li>「產季未到」是否需要在分類列表中排序往後，避免壓過現貨商品？</li>
+            <li>到貨提醒是否需要區分「產季提醒」與「一般補貨提醒」兩種通知文案？</li>
+            <li>GoX 後台是否要新增一欄顯示 API 判斷後的最終前台狀態？</li>
+          </ul>
+
+          <div class="callout">
+            <div class="callout-title">這份 preview 的觀察重點</div>
+            <div>
+              背景已比原版 Primary 更淺；列表區塊刻意保留原本底色；表格底色沒有再被調淡。
+              如果列表在真實筆記裡太像一張獨立卡片，可以改成只有項目列底色或只保留縮排底色。
+            </div>
+          </div>
+        </article>
+      </main>
+    </section>
+  </div>
+</body>
+</html>

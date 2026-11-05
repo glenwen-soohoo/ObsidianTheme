@@ -1,0 +1,124 @@
+/*
+――――――――――――――――――――――――――――――――――――――――――――――
+簡報模式 Presentation Mode
+――――――――――――――――――――――――――――――――――――――――――――――
+
+內容區（筆記本文）整體放大，側邊欄檔案列表、分頁標題、
+狀態列維持原大小。
+
+原理：本文吃 --font-text-size，標題是 em 寫的會等比跟著放大
+（--h1-size: 1.618em、--inline-title-size: var(--h1-size)）；
+側邊欄吃的是 --nav-item-size: var(--font-ui-small)，本主題
+寫死 13px。兩套互不干涉，所以只要蓋 --font-text-size 就好。
+不要用 Ctrl +，那是整個 app 縮放，列表會一起變大。
+
+【目前生效的切換方式】＝ 開法 B：閱讀模式（Ctrl+E）
+其他開法都在下面，要換就把 A 註解掉、把想要的那段解開。
+
+――――――――――――――――――――――――――――――――――――――――――――――
+*/
+
+/* ── 尺寸調這裡 ────────────────────────────── */
+body {
+    /* 本文字級，Obsidian 預設 16px */
+    --presentation-text-size: 28px;
+    /* 單行寬度，主題預設 40rem；字變大行寬要跟著放，不然一行塞不了幾個字 */
+    --presentation-line-width: 64rem;
+}
+
+/* ══ 開法 A：F11 全螢幕 ═══════════════════════
+   Obsidian 進全螢幕時會自己在 body 掛 .is-fullscreen，
+   退出就拿掉。零外掛、一顆鍵、即時、不寫進任何筆記。
+   副作用：平常用全螢幕工作時字也會變大。
+   ───────────────────────────────────────── */
+/*
+body.is-fullscreen .workspace-split.mod-root .workspace-leaf-content[data-type="markdown"] {
+    --font-text-size: var(--presentation-text-size);
+    --file-line-width: var(--presentation-line-width);
+}
+*/
+
+/* ══ 開法 B：閱讀模式當開關（Ctrl+E，預設生效）══
+   按分頁右上角那顆書本圖示、或 Ctrl+E 切過去就放大。
+   零外掛、一顆鍵，但「閱讀模式」這個語意被佔走。
+   ───────────────────────────────────────── */
+.workspace-split.mod-root .markdown-reading-view {
+    --font-text-size: var(--presentation-text-size);
+    --file-line-width: var(--presentation-line-width);
+
+    /* 這幾個變數在 body 那一層就被算成 16px 定死了，不會因為
+       上面改了 --font-text-size 就重算，所以要各自再指定一次。
+       （--code-size、--footnote-size、--tag-size 那些是 0.875em
+       相對單位，會自己跟著放大，不用處理） */
+    --table-text-size: var(--presentation-text-size);
+    --checkbox-size: var(--presentation-text-size);
+    --embed-title-font-size: var(--presentation-text-size);
+}
+
+/* 保險：直接壓 font-size。Obsidian 是用 inline style 把
+   --font-text-size 掛在 body 上的，萬一變數沒傳下來，
+   這兩條用較高的 specificity 直接蓋掉 app.css 的
+   .markdown-preview-view { font-size: var(--font-text-size) } */
+.workspace-split.mod-root .markdown-reading-view .markdown-preview-view,
+.workspace-split.mod-root .markdown-reading-view .markdown-rendered {
+    font-size: var(--presentation-text-size);
+}
+
+/* ══ 開法 C：自訂熱鍵（借「切換易讀行寬」這個指令）══
+   設定 → 快速鍵 → 搜尋「Toggle readable line length」綁一顆鍵，
+   按下去關掉易讀行寬的同時就進簡報模式，可逐分頁切換、
+   不用全螢幕。副作用：行寬會變成整個窗寬。
+   ───────────────────────────────────────── */
+/*
+.markdown-source-view.mod-cm6:not(.is-readable-line-width),
+.markdown-preview-view:not(.is-readable-line-width) {
+    --font-text-size: var(--presentation-text-size);
+}
+*/
+
+/* ══ 開法 D：整個 vault 一直開著 ═══════════════
+   片段打開就放大、關掉就恢復（設定 → 外觀 → CSS 片段）。
+   ───────────────────────────────────────── */
+/*
+.workspace-split.mod-root .workspace-leaf-content[data-type="markdown"] {
+    --font-text-size: var(--presentation-text-size);
+    --file-line-width: var(--presentation-line-width);
+}
+*/
+
+/* ══ 開法 E：單篇筆記 cssclasses: presentation ══
+   只放大指定的那幾篇，跟上面任一種可以並存。
+   ───────────────────────────────────────── */
+.markdown-source-view.presentation,
+.markdown-preview-view.presentation {
+    --font-text-size: var(--presentation-text-size);
+    --file-line-width: var(--presentation-line-width);
+}
+
+/* ══ 開法 F：外掛按鈕（presentation-toggle）═════
+   裝了那支小外掛才有用，ribbon 一顆按鈕 + 可綁熱鍵。
+   ───────────────────────────────────────── */
+body.presentation-mode .workspace-split.mod-root .workspace-leaf-content[data-type="markdown"] {
+    --font-text-size: var(--presentation-text-size);
+    --file-line-width: var(--presentation-line-width);
+}
+
+/* ══ 閱讀模式指示帶 ═══════════════════════════
+   進閱讀模式時內容區最上面出現一條淺黃色提示帶。
+   不想要就把這一整段刪掉。
+   ───────────────────────────────────────── */
+.workspace-split.mod-root .markdown-reading-view::before {
+    content: "閱讀模式";
+    display: block;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    background: #fdf3cf;
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+.theme-dark .workspace-split.mod-root .markdown-reading-view::before {
+    background: #3a3522;
+}

@@ -1,0 +1,9 @@
+/*────────── Tooltip ──────────*/
+
+.tooltip {
+    color: var(--text-normal);
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--tooltip-shadow);
+}

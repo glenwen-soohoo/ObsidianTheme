@@ -1,0 +1,9 @@
+{
+  "id": "presentation-toggle",
+  "name": "Presentation Toggle",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "一鍵切換簡報模式：內容區放大，側邊欄不變。搭配 presentation-mode.css 片段使用。",
+  "author": "Glen",
+  "isDesktopOnly": false
+}
