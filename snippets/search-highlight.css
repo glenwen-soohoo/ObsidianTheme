@@ -42,13 +42,19 @@ body {
 }
 
 /* ── 筆記內的命中字（編輯模式與閱讀模式）───────── */
-.cm-s-obsidian span.obsidian-search-match-highlight,
-.markdown-reading-view .obsidian-search-match-highlight {
-    background-color: var(--search-hit-bg);
-    color: var(--search-hit-text);
+/* 程式碼裡的命中字之前只看得到外框、沒有底色。原因是命中字外面
+   或裡面還有帶程式碼底色的層，蓋掉黃底。與其一層一層猜是哪一層，
+   這裡直接把命中字本身與它底下所有元素的底色一起壓成黃的。 */
+body .obsidian-search-match-highlight,
+body .obsidian-search-match-highlight * {
+    background: var(--search-hit-bg) !important;
+    color: var(--search-hit-text) !important;
+    mix-blend-mode: normal;
+}
+
+body .obsidian-search-match-highlight {
     box-shadow: 0 0 0 2px var(--search-hit-ring);
     border-radius: 2px;
-    mix-blend-mode: normal;
 }
 
 /* ══ 替代樣式 A：不要底色，改成粗底線 ═══════════
@@ -56,8 +62,10 @@ body {
    ───────────────────────────────────────── */
 /*
 .search-result-file-matched-text,
-.cm-s-obsidian span.obsidian-search-match-highlight,
-.markdown-reading-view .obsidian-search-match-highlight {
+body .cm-s-obsidian span.obsidian-search-match-highlight,
+body .cm-s-obsidian span.cm-inline-code.obsidian-search-match-highlight,
+body .markdown-reading-view .obsidian-search-match-highlight,
+body .markdown-reading-view code .obsidian-search-match-highlight {
     background-color: transparent;
     color: inherit;
     box-shadow: none;
